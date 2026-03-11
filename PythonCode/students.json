@@ -1,0 +1,32 @@
+{
+    "students": [
+        {
+            "Name": "Jefff",
+            "Date_of_birth": "13132020",
+            "Gender": "male",
+            "GPA": "2.0",
+            "Semester": "5",
+            "Program": "la",
+            "Number_of_courses": "60"
+        },
+        {
+            "Name": "Mark Grayson",
+            "Date_of_birth": "10102001",
+            "Gender": "Male",
+            "GPA": "3.5",
+            "Semester": "1",
+            "Program": "Animation",
+            "Number_of_courses": "4"
+        },
+        {
+            "Name": "Robert",
+            "Date_of_birth": "10102001",
+            "Gender": "Male",
+            "GPA": "3.0",
+            "Semester": "1",
+            "Program": "Animation",
+            "Number_of_courses": "4"
+        }
+    ]
+}  
+
