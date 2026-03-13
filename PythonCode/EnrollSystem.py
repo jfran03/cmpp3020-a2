@@ -40,14 +40,26 @@ def StudentEdit(filename='PythonCode/students.json'):
         json.dump(students_data, file, indent=4)
         print("The student has been updated.")
 
+def ViewStudents(filename='PythonCode/students.json'):
+    with open(filename, 'r') as file:
+        students_data = json.load(file)
+        students_list = students_data["students"]
+        print("\n The current student list:")
+        for i in range(len(students_list)):
+            print(i + 1, students_list[i]["Name"], "- Birth Date:", students_list[i]["Date_of_birth"], 
+                  "\n Gender:", students_list[i]["Gender"], "- GPA:", students_list[i]["GPA"], 
+                  "- Semester #:", students_list[i]["Semester"], "\n Program:", students_list[i]["Program"], 
+                  "- Courses Enrolled In:", students_list[i]["Number_of_courses"])
+
+
 # methods & helpers
 def SelectOption():
     # displays options for user to select
-    print("Welcome to the Student Enrollment System\n{}\nPlease select an option:\n{}\n{}\n{}\n{}".format(
-            hr(),"1. Enroll a New Student", "2. Edit Enrolled Student", "3. Exit the Application", hr()))
+    print("Welcome to the Student Enrollment System\n{}\nPlease select an option:\n{}\n{}\n{}\n{}\n{}".format(
+            hr(),"1. Enroll a New Student", "2. Edit Enrolled Student", "3. View Students", "4. Exit the Application", hr()))
     
     # accepts an input and validates it
-    option = ValidateInputBasedOnCondition("Select your option: ", lambda x: x in ["1", "2", "3"])
+    option = ValidateInputBasedOnCondition("Select your option: ", lambda x: x in ["1", "2", "3", "4"])
     if option == "1":
         #This makes the user input the information for the student that will be added to the data file.
         print("Enter new student information:")
@@ -66,9 +78,11 @@ def SelectOption():
         print("Student has been added to the system.")
     elif option == "2":
         StudentEdit()
-    else:
+    elif option == "3":
+        ViewStudents()
+    elif option == "4":
         print("Thank you for using the program.")
-    
+
 
 
 # this method takes in a condition and validate it BASED on custom conditions
