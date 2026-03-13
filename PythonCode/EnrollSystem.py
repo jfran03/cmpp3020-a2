@@ -14,6 +14,7 @@ def EnrollNewStudent(new_student, filename = 'PythonCode/students.json'):
         students_data["students"].append(new_student)
         file.seek(0)
         json.dump(students_data, file, indent=4)
+        file.truncate()
 
 def StudentEdit(filename='PythonCode/students.json'):
     with open(filename, 'r+') as file:
@@ -38,6 +39,7 @@ def StudentEdit(filename='PythonCode/students.json'):
         students_list[student_number]["Number_of_courses"] = courses_new
         file.seek(0)
         json.dump(students_data, file, indent=4)
+        file.truncate()
         print("The student has been updated.")
 
 def ViewStudents(filename='PythonCode/students.json'):
@@ -50,16 +52,29 @@ def ViewStudents(filename='PythonCode/students.json'):
                   "\n Gender:", students_list[i]["Gender"], "- GPA:", students_list[i]["GPA"], 
                   "- Semester #:", students_list[i]["Semester"], "\n Program:", students_list[i]["Program"], 
                   "- Courses Enrolled In:", students_list[i]["Number_of_courses"])
-
+            
+def RemoveStudent(filename='PythonCode/students.json'):
+    with open(filename, 'r+') as file:
+        students_data = json.load(file)
+        students_list = students_data["students"]
+        print("\nPlease select a student to remove:")
+        for i in range(len(students_list)):
+            print(i + 1, students_list[i]["Name"])
+        students_number = int(input("Enter the student's number: ")) - 1
+        removed_student = students_list.pop(students_number)
+        file.seek(0)
+        json.dump(students_data, file, indent=4)
+        file.truncate()
+        print(removed_student["Name"], "has been removed. Thank you.")
 
 # methods & helpers
 def SelectOption():
     # displays options for user to select
-    print("Welcome to the Student Enrollment System\n{}\nPlease select an option:\n{}\n{}\n{}\n{}\n{}".format(
-            hr(),"1. Enroll a New Student", "2. Edit Enrolled Student", "3. View Students", "4. Exit the Application", hr()))
+    print("Welcome to the Student Enrollment System\n{}\nPlease select an option:\n{}\n{}\n{}\n{}\n{}\n{} ".format(
+            hr(),"1. Enroll a New Student", "2. Edit Enrolled Student", "3. View Students", "4. Remove Student", "5. Exit the Application", hr()))
     
     # accepts an input and validates it
-    option = ValidateInputBasedOnCondition("Select your option: ", lambda x: x in ["1", "2", "3", "4"])
+    option = ValidateInputBasedOnCondition("Select your option: ", lambda x: x in ["1", "2", "3", "4", "5"])
     if option == "1":
         #This makes the user input the information for the student that will be added to the data file.
         print("Enter new student information:")
@@ -81,8 +96,9 @@ def SelectOption():
     elif option == "3":
         ViewStudents()
     elif option == "4":
+        RemoveStudent()
+    elif option == "5":
         print("Thank you for using the program.")
-
 
 
 # this method takes in a condition and validate it BASED on custom conditions
