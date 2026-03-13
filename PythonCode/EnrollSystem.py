@@ -9,13 +9,16 @@ def main():
 #https://www.geeksforgeeks.org/python/append-to-json-file-using-python/
 def EnrollNewStudent(new_student, filename = 'PythonCode/students.json'):
     #This functions adds in new students to the data file.
+    #This selects the data file.
     with open(filename, 'r+') as file:
         students_data = json.load(file)
+        #This adds the new student to the data file making sure the data appears after the previous data in the file. 
         students_data["students"].append(new_student)
         file.seek(0)
         json.dump(students_data, file, indent=4)
 
 def StudentEdit(filename='PythonCode/students.json'):
+    #This function edits student information.
     with open(filename, 'r+') as file:
         students_data = json.load(file)
         students_list = students_data["students"]
@@ -41,9 +44,11 @@ def StudentEdit(filename='PythonCode/students.json'):
         print("The student has been updated.")
 
 def ViewStudents(filename='PythonCode/students.json'):
+    #This function displays all students in the database.
     with open(filename, 'r') as file:
         students_data = json.load(file)
         students_list = students_data["students"]
+        #This takes all of the student data and presents in a organized display.
         print("\n The current student list:")
         for i in range(len(students_list)):
             print(i + 1, students_list[i]["Name"], "- Birth Date:", students_list[i]["Date_of_birth"], 
@@ -60,6 +65,7 @@ def SelectOption():
     
     # accepts an input and validates it
     option = ValidateInputBasedOnCondition("Select your option: ", lambda x: x in ["1", "2", "3", "4"])
+    #This is the logic used to correctly use the function depending on what option the user seleected.
     if option == "1":
         #This makes the user input the information for the student that will be added to the data file.
         print("Enter new student information:")
@@ -85,7 +91,7 @@ def SelectOption():
 
 
 
-# this method takes in a condition and validate it BASED on custom conditions
+# this method takes in a condition and validates it BASED on custom conditions
 # this should make it such that the method can be used for various use cases in the CLI
 def ValidateInputBasedOnCondition(inputString, func):
     option = input(inputString)
