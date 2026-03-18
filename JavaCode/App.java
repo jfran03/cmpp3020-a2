@@ -1,6 +1,7 @@
 package JavaCode;
 
 import JavaCode.Student.Gender;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 // normally a new file for abstract classes/interfaces is made
@@ -16,12 +17,16 @@ public class App {
 
     private static boolean process = true;
     private static final Scanner SCANNER = new Scanner(System.in); // ide was hinting final keyword, and i agree
-    private static Student[] studentData = {
-        new Student("Jefff", "Bezsos", "13/13/2020", Gender.MALE, 2.0f, "Librarian", 1, 3),
-        new Student("Mark", "Grayson", "10/10/2020", Gender.MALE, 3.5f, "Animation", 2, 4),
-        new Student("Robert", "Bob", "09/09/2020", Gender.OTHER, 3.0f, "Librarian", 3, 5),};
+
+    // java primitive lists dont resize dynamically, we either clone the array to resize or use ArrayList class
+    private static ArrayList<Student> studentData = new ArrayList<>();
 
     public static void main(String[] args) {
+
+        // ideally we'll never do this in the same program as the App.java, FYI!
+        studentData.add(new Student("Jefff", "Bezsos", "13/13/2020", Gender.MALE, 2.0f, "Librarian", 1, 3));
+        studentData.add(new Student("Mark", "Grayson", "10/10/2020", Gender.MALE, 3.5f, "Animation", 2, 4));
+        studentData.add(new Student("Robert", "Bob", "09/09/2020", Gender.OTHER, 3.0f, "Librarian", 3, 5));
 
         while (process) {
             // sorry to whoever has to edit this!
@@ -35,7 +40,7 @@ public class App {
             // my ide was hinting a "rule switch" case, but i like this implementation compared to tradtional switch case
             switch (option) {
                 case "1" -> {
-                    System.out.println("You have selected to enroll a student.");
+                    EnrollStudent();
                 }
                 case "2" -> {
                     System.out.println("You have selected to edit an enrolled student.");
@@ -66,6 +71,47 @@ public class App {
         }
     }
 
+    // adds a new student to the "database"
+    private static void EnrollStudent() {
+
+        // input validation through regex, ensures that data is good for when we add it to the class
+        String firstNameInput = validateInputBasedOnCondition("Student First Name: ", input -> input.matches("[a-zA-Z]+"));
+        String lastNameInput = validateInputBasedOnCondition("Student Last Name: ", input -> input.matches("[a-zA-Z]+"));
+        String dobInput = validateInputBasedOnCondition("Student Date of Birth (MM/DD/YYYY): ", input -> input.matches("\\d{2}/\\d{2}/\\d{4}"));
+
+        // checks gender enums list (can accept lowercase/mix of both) to see if input matches
+        String genderInput = validateInputBasedOnCondition("Student Gender (male, female, non_binary, other): ", input -> {
+            for (Gender gender : Gender.values()) {
+                if (gender.name().equalsIgnoreCase(input)) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        // ensures value is b/n 0.0-4.0
+        // im not even gonna try regex to enforce the 4.0 scale
+        String gpaInput = validateInputBasedOnCondition("Student GPA (4.0 Scale): ", input -> {
+            try {
+                float gpa = Float.parseFloat(input);
+                return gpa >= 0.0f && gpa <= 4.0f;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        });
+
+        String programInput = validateInputBasedOnCondition("Student Program: ", input -> input.matches("[a-zA-Z ]+"));
+
+        // only allows integers
+        String currentSemesterInput = validateInputBasedOnCondition("Current Semester: ", input -> input.matches("\\d+"));
+        String coursesEnrolledInput = validateInputBasedOnCondition("Courses Enrolled: ", input -> input.matches("\\d+"));
+
+        studentData.add(new Student(firstNameInput, lastNameInput, dobInput, Gender.valueOf(genderInput.toUpperCase()), Float.parseFloat(gpaInput), programInput, Integer.parseInt(currentSemesterInput), Integer.parseInt(coursesEnrolledInput)));
+
+        System.out.printf("%s %s has been added to the student database.", firstNameInput, lastNameInput);
+    }
+
+    // this method iterates through studentData list and prints them
     private static void ViewStudents() {
         System.out.println("The Current Student List:\n");
         for (Student student : studentData) {
