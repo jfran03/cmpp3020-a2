@@ -100,12 +100,14 @@ public class App {
             }
         });
 
+        // string validation, allow space's for multiple words like "Software Development"
         String programInput = validateInputBasedOnCondition("Student Program: ", input -> input.matches("[a-zA-Z ]+"));
 
-        // only allows integers
+        // only allows unsigned ints
         String currentSemesterInput = validateInputBasedOnCondition("Current Semester: ", input -> input.matches("\\d+"));
         String coursesEnrolledInput = validateInputBasedOnCondition("Courses Enrolled: ", input -> input.matches("\\d+"));
 
+        // adds new user to  database
         studentData.add(new Student(firstNameInput, lastNameInput, dobInput, Gender.valueOf(genderInput.toUpperCase()), Float.parseFloat(gpaInput), programInput, Integer.parseInt(currentSemesterInput), Integer.parseInt(coursesEnrolledInput)));
 
         System.out.printf("%s %s has been added to the student database.", firstNameInput, lastNameInput);
