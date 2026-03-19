@@ -30,11 +30,11 @@ public class App {
 
         while (process) {
             // sorry to whoever has to edit this!
-            System.out.printf("\nWelcome to the Student Enrollment System\n%s\nPlease select an option:\n%s\n%s\n%s\n%s\n%s\n", hr(), "1. Enroll a student", "2. Edit enrolled student", "3. View enrolled students", "4. Exit", hr());
+            System.out.printf("\nWelcome to the Student Enrollment System\n%s\nPlease select an option:\n%s\n%s\n%s\n%s\n%s\n%s\n", hr(), "1. Enroll a student", "2. Edit enrolled student","3. Remove enrolled student","4. View enrolled students", "5. Exit", hr());
 
             // implementation here is kind of naive, but fits all test cases!
             String option = validateInputBasedOnCondition("Select your option: ", input -> {
-                return input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4");
+                return input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5");
             });
 
             // my ide was hinting a "rule switch" case, but i like this implementation compared to tradtional switch case
@@ -45,16 +45,21 @@ public class App {
                 case "2" -> {
                     System.out.println("You have selected to edit an enrolled student.");
                 }
-                case "3" -> {
-                    ViewStudents();
+                case "3" ->{
+                    System.out.println("You have selected to remove an enrolled student.");
                 }
                 case "4" -> {
+                    ViewStudents();
+                }
+                case "5" -> {
                     System.out.println("Exiting the system. Goodbye!");
                     process = false;
                 }
             }
         }
     }
+
+
 
     // this method takes in a condition and validate it BASED on custom conditions
     // this should make it such that the method can be used for various use cases in the CLI
