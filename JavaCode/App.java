@@ -30,7 +30,7 @@ public class App {
 
         while (process) {
             // sorry to whoever has to edit this!
-            System.out.printf("\nWelcome to the Student Enrollment System\n%s\nPlease select an option:\n%s\n%s\n%s\n%s\n%s\n%s\n", hr(), "1. Enroll a student", "2. Edit enrolled student","3. Remove enrolled student","4. View enrolled students", "5. Exit", hr());
+            System.out.printf("\nWelcome to the Student Enrollment System\n%s\nPlease select an option:\n%s\n%s\n%s\n%s\n%s\n%s\n", hr(), "1. Enroll a New Student", "2. Edit Enrolled Student", "3. View Enrolled Students", "4. Remove Enrolled Student", "5. Exit the Application", hr());
 
             // implementation here is kind of naive, but fits all test cases!
             String option = validateInputBasedOnCondition("Select your option: ", input -> {
@@ -43,13 +43,13 @@ public class App {
                     EnrollStudent();
                 }
                 case "2" -> {
-                    System.out.println("You have selected to edit an enrolled student.");
+                    EditStudent();
                 }
-                case "3" ->{
-                    System.out.println("You have selected to remove an enrolled student.");
+                case "3" -> {
+                    ViewStudents();
                 }
                 case "4" -> {
-                    ViewStudents();
+                    RemoveStudent();
                 }
                 case "5" -> {
                     System.out.println("Exiting the system. Goodbye!");
@@ -58,8 +58,6 @@ public class App {
             }
         }
     }
-
-
 
     // this method takes in a condition and validate it BASED on custom conditions
     // this should make it such that the method can be used for various use cases in the CLI
@@ -74,6 +72,22 @@ public class App {
             System.out.println("Invalid input, please try again.");
             return validateInputBasedOnCondition(inputString, condition);
         }
+    }
+
+    // we could overload "enrollstudent" method but i don't think it'll be necessary
+    private static void EditStudent() {
+        Student student = findStudentOnName();
+
+        // the core function here should be, if the user wants to change something they can add an input
+        // if they dont, just press Enter, the information does not change, we'll need to take this into account
+    }
+
+    // finds and removes student form ArrayList, pretty straightforward
+    private static void RemoveStudent() {
+        Student student = findStudentOnName();
+
+        System.out.printf("%s %s has been removed from the student database.\n%s", student.firstName, student.lastName,hr());
+        studentData.remove(student);
     }
 
     // adds a new student to the "database"
@@ -127,6 +141,29 @@ public class App {
                     student.gender, student.gpa, student.program, student.currentSemester, student.coursesEnrolled
             );
         }
+    }
+
+    // helper method that asks for a studet based on first and last name, no case sensitivty
+    // will keep prompting until user inputs correct name
+    private static Student findStudentOnName() {
+        Student result = null;
+
+        // we shouldn't need to validate, but it wont hurt considering all entries are compliant with the format
+        String firstNameInput = validateInputBasedOnCondition("Student First Name: ", input -> input.matches("[a-zA-Z]+"));
+        String lastNameInput = validateInputBasedOnCondition("Student Last Name: ", input -> input.matches("[a-zA-Z]+"));
+
+        for (Student student : studentData) {
+            if (student.firstName.equalsIgnoreCase(firstNameInput) && student.lastName.equalsIgnoreCase(lastNameInput)) {
+                result = student;
+            }
+        }
+
+        if (result == null) {
+            System.out.printf("\n%s %s was not found, try again.\n", firstNameInput, lastNameInput);
+            findStudentOnName();
+        }
+
+        return result;
     }
 
     // create a horizontal line for better UI
