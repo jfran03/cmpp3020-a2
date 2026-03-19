@@ -33,17 +33,17 @@ public class App {
         studentData.add(new Student(3,"Robert", "Bob", "09/09/2020", Gender.OTHER, 3.0f, "Business", 3, 5));
 
 
-        programData.add(new Program(1, "Programmer", 2.5f, "01/01/2023", "12/31/2023", new ArrayList<Long>(List.of(101L, 102L)), new ArrayList<Long>(List.of(1L,2L ))));
-        programData.add(new Program(2, "CyberSecurity", 2.5f, "01/01/2023", "12/31/2023", new ArrayList<Long>(List.of(101L, 102L)), new ArrayList<Long>(List.of(1L,2L ))));
-        programData.add(new Program(3, "Business", 2.5f, "01/01/2023", "12/31/2023", new ArrayList<Long>(List.of(101L, 102L)), new ArrayList<Long>(List.of(1L,2L ))));
+        programData.add(new Program(1, "Programmer", 2.5f, new ArrayList<Long>(List.of(101L, 102L)), new ArrayList<Long>(List.of(1L,2L ))));
+        programData.add(new Program(2, "CyberSecurity", 2.5f, new ArrayList<Long>(List.of(101L, 102L)), new ArrayList<Long>(List.of(1L,2L ))));
+        programData.add(new Program(3, "Business", 2.5f,  new ArrayList<Long>(List.of(101L, 102L)), new ArrayList<Long>(List.of(1L,2L ))));
         
-        courseData.add(new Course(1, "Intro to Programming", 1, 1,"01/01/2023", "04/30/2023",new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(2, "Data Structures", 1, 1,"01/01/2023", "04/30/2023",new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(3, "Finance", 3, 1,"01/01/2023", "04/30/2023",new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(4, "Marketing", 3, 1,"01/01/2023", "04/30/2023",new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(5, "Intro to Cybersecurity", 2, 1,"01/01/2023", "04/30/2023",new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(6, "Networking", 2, 1,"01/01/2023", "04/30/2023",new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(7, "Cloud Security", 2, 1,"01/01/2023", "04/30/2023",new ArrayList<Long>(List.of(1L))));
+        courseData.add(new Course(1, "Intro to Programming", 1,new ArrayList<Long>(List.of(1L))));
+        courseData.add(new Course(2, "Data Structures", 1, new ArrayList<Long>(List.of(1L))));
+        courseData.add(new Course(3, "Finance", 3, new ArrayList<Long>(List.of(1L))));
+        courseData.add(new Course(4, "Marketing", 3, new ArrayList<Long>(List.of(1L))));
+        courseData.add(new Course(5, "Intro to Cybersecurity", 2,new ArrayList<Long>(List.of(1L))));
+        courseData.add(new Course(6, "Networking", 2, new ArrayList<Long>(List.of(1L))));
+        courseData.add(new Course(7, "Cloud Security", 2,new ArrayList<Long>(List.of(1L))));
 
 
 

@@ -10,13 +10,11 @@ public class Program {
     public ArrayList<Long> requiredCourses;   
     public ArrayList<Long> enrolledStudents; 
 
-        public Program(long programId, String programName, float prerequisiteGpa, String startDate, String endDate, ArrayList<Long> requiredCourses, ArrayList<Long> enrolledStudents) {
+        public Program(long programId, String programName, float prerequisiteGpa, ArrayList<Long> requiredCourses, ArrayList<Long> enrolledStudents) {
 
         this.programId = programId;
         this.programName = programName;
         this.prerequisiteGpa = prerequisiteGpa;
-        this.startDate = startDate;
-        this.endDate = endDate;
         this.requiredCourses = new ArrayList<>(requiredCourses);
         this.enrolledStudents = new ArrayList<>(enrolledStudents);
     }
