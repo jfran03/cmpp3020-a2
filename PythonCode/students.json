@@ -17,16 +17,6 @@
             "Semester": "1",
             "Program": "Animation",
             "Number_of_courses": "4"
-        },
-        {
-            "Name": "Robert",
-            "Date_of_birth": "10102001",
-            "Gender": "Male",
-            "GPA": "3.0",
-            "Semester": "1",
-            "Program": "Animation",
-            "Number_of_courses": "4"
         }
     ]
-}  
-
+}
