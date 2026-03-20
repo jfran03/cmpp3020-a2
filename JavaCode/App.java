@@ -59,34 +59,132 @@ public class App {
         }
     }
 
-    // this method takes in a condition and validate it BASED on custom conditions
-    // this should make it such that the method can be used for various use cases in the CLI
-    // for java, we need to make an interface to pass a lambda function as a parameter
-    private static String validateInputBasedOnCondition(String inputString, ValidationCondition condition) {
-        System.out.print(inputString);
-        String input = SCANNER.nextLine();
-
-        if (condition.validate(input)) {
-            return input;
-        } else {
-            System.out.println("Invalid input, please try again.");
-            return validateInputBasedOnCondition(inputString, condition);
-        }
-    }
-
     // we could overload "enrollstudent" method but i don't think it'll be necessary
     private static void EditStudent() {
         Student student = findStudentOnName();
 
         // the core function here should be, if the user wants to change something they can add an input
         // if they dont, just press Enter, the information does not change, we'll need to take this into account
+        // sorry for anyone reading this!
+        validateInputBasedOnCondition("Student First Name: ", input -> {
+            boolean valid = input.matches("[a-zA-Z]+") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.firstName = input;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Student Last Name: ", input -> {
+            boolean valid = input.matches("[a-zA-Z]+") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.lastName = input;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Student Date of Birth (MM/DD/YYYY): ", input -> {
+            boolean valid = input.matches("\\d{2}/\\d{2}/\\d{4}") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.dateOfBirth = input;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Student Gender (male, female, non_binary, other): ", input -> {
+            boolean valid = input.length() == 0;
+
+            for (Gender gender : Gender.values()) {
+                if (gender.name().equalsIgnoreCase(input)) {
+                    valid = true;
+                }
+            }
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.gender = Gender.valueOf(input.toUpperCase());
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Student GPA (4.0 Scale): ", input -> {
+            // hacky fix
+            boolean valid = input.length() == 0 || (Float.parseFloat(input) >= 0.0f && Float.parseFloat(input) <= 4.0f);
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.gpa = Float.parseFloat(input);
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Student Program: ", input -> {
+            boolean valid = input.matches("[a-zA-Z]+") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.program = input;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Current Semester: ", input -> {
+            boolean valid = input.matches("\\d+") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.currentSemester = Integer.parseInt(input);
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Courses Enrolled: ", input -> {
+            boolean valid = input.matches("\\d+") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.coursesEnrolled = Integer.parseInt(input);
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        System.out.printf("%s\n%s %s has been updated.\n%s", hr(),student.firstName, student.lastName,hr());
     }
 
     // finds and removes student form ArrayList, pretty straightforward
     private static void RemoveStudent() {
         Student student = findStudentOnName();
 
-        System.out.printf("%s %s has been removed from the student database.\n%s", student.firstName, student.lastName,hr());
+        System.out.printf("%s %s has been removed from the student database.\n%s", student.firstName, student.lastName, hr());
         studentData.remove(student);
     }
 
@@ -143,7 +241,7 @@ public class App {
         }
     }
 
-    // helper method that asks for a studet based on first and last name, no case sensitivty
+    // helper method that retrieves a reference for a studet based on first and last name, no case sensitivty
     // will keep prompting until user inputs correct name
     private static Student findStudentOnName() {
         Student result = null;
@@ -164,6 +262,21 @@ public class App {
         }
 
         return result;
+    }
+
+    // this method takes in a condition and validate it BASED on custom conditions
+    // this should make it such that the method can be used for various use cases in the CLI
+    // for java, we need to make an interface to pass a lambda function as a parameter
+    private static String validateInputBasedOnCondition(String inputString, ValidationCondition condition) {
+        System.out.print(inputString);
+        String input = SCANNER.nextLine();
+
+        if (condition.validate(input)) {
+            return input;
+        } else {
+            System.out.println("Invalid input, please try again.");
+            return validateInputBasedOnCondition(inputString, condition);
+        }
     }
 
     // create a horizontal line for better UI
