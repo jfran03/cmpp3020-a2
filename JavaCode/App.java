@@ -1,7 +1,7 @@
 package JavaCode;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import JavaCode.Student.Gender;
@@ -27,38 +27,78 @@ public class App {
 
     public static void main(String[] args) {
 
-        // ideally we'll never do this in the same program as the App.java, FYI!
-        studentData.add(new Student(1,"Jefff", "Bezsos", "13/13/2020", Gender.MALE, 2.0f, "Programmer", 1, 3));
-        studentData.add(new Student(2,"Mark", "Grayson", "10/10/2020", Gender.MALE, 3.5f, "CyberSecurity", 2, 4));
-        studentData.add(new Student(3,"Robert", "Bob", "09/09/2020", Gender.OTHER, 3.0f, "Business", 3, 5));
-
-
-        programData.add(new Program(1, "Programmer", 2.5f, new ArrayList<Long>(List.of(101L, 102L)), new ArrayList<Long>(List.of(1L,2L ))));
-        programData.add(new Program(2, "CyberSecurity", 2.5f, new ArrayList<Long>(List.of(101L, 102L)), new ArrayList<Long>(List.of(1L,2L ))));
-        programData.add(new Program(3, "Business", 2.5f,  new ArrayList<Long>(List.of(101L, 102L)), new ArrayList<Long>(List.of(1L,2L ))));
-        
-        courseData.add(new Course(1, "Intro to Programming", 1,new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(2, "Data Structures", 1, new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(3, "Finance", 3, new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(4, "Marketing", 3, new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(5, "Intro to Cybersecurity", 2,new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(6, "Networking", 2, new ArrayList<Long>(List.of(1L))));
-        courseData.add(new Course(7, "Cloud Security", 2,new ArrayList<Long>(List.of(1L))));
-
+        populateDatabase();
 
 
 
     while (process) {
-                // sorry to whoever has to edit this!
-                System.out.printf("\nWelcome to the Student Enrollment System\n%s\nPlease select an option:\n%s\n%s\n%s\n%s\n%s\n%s\n", hr(), "1. Enroll a New Student", "2. Edit Enrolled Student", "3. View Enrolled Students", "4. Remove Enrolled Student", "5. Exit the Application", hr());
+        // sorry to whoever has to edit this!
+        System.out.printf("\nHello, welcome to the Registration Program\n%s\nPlease select an option:\n%s\n%s\n%s\n%s\n%s\n", 
+                        hr(), 
+                        "1. View data related to Students", 
+                        "2. View instution's programs", 
+                        "3. View instituions courses", 
+                        "4. Exit the Application", 
+                        hr());
+        // implementation here is kind of naive, but fits all test cases!
+        String mainMenuOptions = validateInputBasedOnCondition("Select your option: ", input -> {
+            return input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5");
+        });
 
-                // implementation here is kind of naive, but fits all test cases!
-                String option = validateInputBasedOnCondition("Select your option: ", input -> {
-                    return input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5");
-                });
+        // my ide was hinting a "rule switch" case, but i like this implementation compared to tradtional switch case
+        switch (mainMenuOptions) {
+            case "1" -> { 
+                boolean studentMenu = true;
+                while(studentMenu) {
+                    System.out.printf("\nStudent Menu\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+                        hr(),
+                        "1. Enroll a New Student",
+                        "2. Edit Student",
+                        "3. View Enrolled Students",
+                        "4. Remove Student",
+                        "5. Return to Main Menu",
+                        hr()
+                    );
 
-                // my ide was hinting a "rule switch" case, but i like this implementation compared to tradtional switch case
-                switch (option) {
+                    String option = validateInputBasedOnCondition("Select your option: ", input -> {
+                        return input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5");
+                    });
+                    switch (option) {
+                        case "1" -> {
+                            EnrollStudent();
+                        }
+                        case "2" -> {
+                            EditStudent();
+                        }
+                        case "3" -> {
+                            ViewStudents();
+                        }
+                        case "4" -> {
+                            RemoveStudent();
+                        }
+                        case "5" -> {
+                            studentMenu = false;
+                        }
+                    }
+                }
+            }
+            case "2" -> {  
+                boolean programMenu = true;
+                while(programMenu) {
+                    System.out.printf("\nProgram Menu\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+                        hr(),
+                        "1. View Programs",
+                        "2. Create Program",
+                        "3. Edit Program",
+                        "4. Remove Program",
+                        "5. Return to Main Menu",
+                        hr()
+                    );
+
+                    String option = validateInputBasedOnCondition("Select your option: ", input -> {
+                        return input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5");
+                    });
+                                    switch (option) {
                     case "1" -> {
                         EnrollStudent();
                     }
@@ -72,34 +112,53 @@ public class App {
                         RemoveStudent();
                     }
                     case "5" -> {
-                        System.out.println("Exiting the system. Goodbye!");
-                        process = false;
+                        programMenu = false;
                     }
                 }
+                }
             }
+            case "3" -> {  
+                boolean courseMenu = true;
+                while(courseMenu) {
+                    System.out.printf("\nCourse Menu\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+                        hr(),
+                        "1. View Courses",
+                        "2. Create Course",
+                        "3. Remove Course",
+                        "4. Return to Main Menu",
+                        hr()
+                    );
+
+                    String option = validateInputBasedOnCondition("Select your option: ", input -> {
+                        return input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4");
+                    });
+                                    switch (option) {
+                    case "1" -> {
+                        EnrollStudent();
+                    }
+                    case "2" -> {
+                        EditStudent();
+                    }
+                    case "3" -> {
+                        ViewStudents();
+                    }
+                    case "4" -> {
+                       courseMenu = false;
+                    }
+
+                }
+                }
+            }
+            case "4" -> {  
+                System.out.println("Exiting the system. Goodbye!");
+                process = false;
+            }
+        }
+    }
         }
     
-    //
    
-    // 🐱 generates id based on length of arraylist and handles all the class objects
 
-    private static <T> long generateId(ArrayList<T> list) {
-        return list.size() + 1;
-    }
-
-    // 🐱 reorders ids when class object is removed from the database 
-    private static <T> void resequenceIds(ArrayList<T> list) {
-        long id = 1;
-        for (T obj : list) {
-            if (obj instanceof Student s) {
-                s.studentId = id++;
-            } else if (obj instanceof Program p) {
-                p.programId = id++;
-            } else if (obj instanceof Course c) {
-                c.courseId = id++;
-            }
-        }
-    }
     // this method takes in a condition and validate it BASED on custom conditions
     // this should make it such that the method can be used for various use cases in the CLI
     // for java, we need to make an interface to pass a lambda function as a parameter
@@ -115,13 +174,211 @@ public class App {
         }
     }
 
+    //this method queries the class instances and is only invoked through the validation interface, if entity exists it will return the queried entity 
+    //this acts as a helper method to handle database queries and functions
+    //Uses call by refernece  
+    //Used source to help with Type generics: https://docs.oracle.com/javase/tutorial/java/generics/types.html 
+
+    private static <T> T queryDatabase (ArrayList<T> list,  ValidationCondition condition) {
+        for (T item : list) {
+            String name = "";
+
+            if (item instanceof Student s) {
+                name = s.firstName + " " + s.lastName;
+            } else if (item instanceof Program p) {
+                name = p.programName;
+            } else if (item instanceof Course c) {
+                name = c.courseName;
+            }
+
+            if (condition.validate(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    //this method gets the program's dummy dataset and populates each class object's arrayset to reference each other to simulate a working database 
+    private static void populateDatabase() {
+        // ideally we'll never do this in the same program as the App.java, FYI!
+        studentData.add(new Student("Jefff", "Bezsos", "13/13/2020", Gender.MALE, 2.0f, "softwareDevelopment", 1, 0,new ArrayList<String>()));
+        studentData.add(new Student("Mark", "Grayson", "10/10/2020", Gender.MALE, 3.5f, "CyberSecurity", 2, 0,new ArrayList<String>()));
+        studentData.add(new Student("Robert", "Bob", "09/09/2020", Gender.OTHER, 3.0f, "Business", 3, 0,new ArrayList<String>()));
+
+
+        programData.add(new Program("softwareDevelopment", 2.5f, new ArrayList<String>(), new ArrayList<String>()));
+        programData.add(new Program("CyberSecurity", 2.5f,new ArrayList<String>(), new ArrayList<String>()));
+        programData.add(new Program("Business", 2.5f, new ArrayList<String>(), new ArrayList<String>()));
+        
+        courseData.add(new Course("Intro to Programming", "softwareDevelopment",new ArrayList<String>()));
+        courseData.add(new Course("Data Structures", "softwareDevelopment", new ArrayList<String>()));
+        courseData.add(new Course("Finance", "Business", new ArrayList<String>()));
+        courseData.add(new Course("Marketing", "Business", new ArrayList<String>()));
+        courseData.add(new Course("Intro to Cybersecurity", "CyberSecurity",new ArrayList<String>()));
+        courseData.add(new Course("Networking", "CyberSecurity",new ArrayList<String>()));
+        courseData.add(new Course("Cloud Security","CyberSecurity",new ArrayList<String>()));
+        
+        //populates empty array fields for the class instances 
+        for (Student s : studentData) {
+            for (Program p : programData) {
+                if (p.programName.equalsIgnoreCase(s.program)) {
+                    p.enrolledStudents.add(s.firstName + " " + s.lastName);
+                }
+            }
+        }
+        //
+
+        for (Course c : courseData) {
+        for (Program p : programData) {
+            if (p.programName.equalsIgnoreCase(c.programName)) {
+                p.requiredCourses.add(c.courseName);
+            }
+        }
+
+        
+    }
+
+    }
+
+    //this method updates the data whenever a change has been created in the database,
+    private static void updateDatabase() {
+        //all students must belong to a program, if they dont put them as unregistered 
+    }
+
+    //this method cleans up any data that exists in the database but shouldn't, 
+    //Only used for testing purposes for the dummy data 
+    private static void cleanUpDatabase() {
+        //checks each class instance's array to see if the all of its contents are properly referencing each other or not
+        //Database rules:
+        //all programs should have a course. If not delete it
+        //all courses should belong to a program.If not delete it
+        //all students must belong to a program, if they dont put them as unregistered 
+        //removes class instances that shouldn't exist through validation interface 
+    } 
     // we could overload "enrollstudent" method but i don't think it'll be necessary
+ 
     private static void EditStudent() {
         Student student = findStudentOnName();
 
         // the core function here should be, if the user wants to change something they can add an input
         // if they dont, just press Enter, the information does not change, we'll need to take this into account
+        // sorry for anyone reading this!
+        validateInputBasedOnCondition("Student First Name: ", input -> {
+            boolean valid = input.matches("[a-zA-Z]+") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.firstName = input;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Student Last Name: ", input -> {
+            boolean valid = input.matches("[a-zA-Z]+") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.lastName = input;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Student Date of Birth (MM/DD/YYYY): ", input -> {
+            boolean valid = input.matches("\\d{2}/\\d{2}/\\d{4}") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.dateOfBirth = input;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Student Gender (male, female, non_binary, other): ", input -> {
+            boolean valid = input.length() == 0;
+
+            for (Gender gender : Gender.values()) {
+                if (gender.name().equalsIgnoreCase(input)) {
+                    valid = true;
+                }
+            }
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.gender = Gender.valueOf(input.toUpperCase());
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Student GPA (4.0 Scale): ", input -> {
+            // hacky fix
+            boolean valid = input.length() == 0 || (Float.parseFloat(input) >= 0.0f && Float.parseFloat(input) <= 4.0f);
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.gpa = Float.parseFloat(input);
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Student Program: ", input -> {
+            boolean valid = input.matches("[a-zA-Z]+") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.program = input;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        validateInputBasedOnCondition("Current Semester: ", input -> {
+            boolean valid = input.matches("\\d+") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.currentSemester = Integer.parseInt(input);
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        //took courses enrolled out as it will be 0 by default 
+        /*
+        validateInputBasedOnCondition("Courses Enrolled: ", input -> {
+            boolean valid = input.matches("\\d+") || input.length() == 0;
+
+            if (valid) {
+                if (input.length() != 0) {
+                    student.numberOfCourses = Integer.parseInt(input);
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
+        */
+        System.out.printf("%s\n%s %s has been updated.\n%s", hr(),student.firstName, student.lastName,hr());
     }
+
 
     // finds and removes student form ArrayList, pretty straightforward
     private static void RemoveStudent() {
@@ -129,15 +386,11 @@ public class App {
 
         System.out.printf("%s %s has been removed from the student database.\n%s", student.firstName, student.lastName,hr());
         studentData.remove(student);
-        resequenceIds(studentData);
     }
     
-
-
     // adds a new student to the "database"
     private static void EnrollStudent() {
-        // 🐱 all of the class objects will have an id that iterates by one, another method will be created that sorts the id upon every delected and added entry.
-        long studentId = generateId(studentData); 
+
         
         // input validation through regex, ensures that data is good for when we add it to the class
         String firstNameInput = validateInputBasedOnCondition("Student First Name: ", input -> input.matches("[a-zA-Z]+"));
@@ -167,15 +420,20 @@ public class App {
         });
 
         // string validation, allow space's for multiple words like "Software Development"
-        String programInput = validateInputBasedOnCondition("Student Program: ", input -> input.matches("[a-zA-Z ]+"));
+        // removed input for updated validation flow; Since the student needs to be a certain gpa to enroll in a program 
+        // It would be better to have the student be created first then enroll after 
+
+        //String programInput = validateInputBasedOnCondition("Student Program: ", input -> input.matches("[a-zA-Z ]+"));
 
         // only allows unsigned ints
         String currentSemesterInput = validateInputBasedOnCondition("Current Semester: ", input -> input.matches("\\d+"));
-        String coursesEnrolledInput = validateInputBasedOnCondition("Courses Enrolled: ", input -> input.matches("\\d+"));
 
-        // adds new user to  database
-        studentData.add(new Student(studentId,firstNameInput, lastNameInput, dobInput, Gender.valueOf(genderInput.toUpperCase()), Float.parseFloat(gpaInput), programInput, Integer.parseInt(currentSemesterInput), Integer.parseInt(coursesEnrolledInput)));
+        //took "numberOfCoursesInput" out as it will be 0 by default 
+        //String numberOfCoursesInput = validateInputBasedOnCondition("Courses Enrolled: ", input -> input.matches("\\d+"));
 
+        // adds new user to database
+        studentData.add(new Student(firstNameInput, lastNameInput, dobInput, Gender.valueOf(genderInput.toUpperCase()), Float.parseFloat(gpaInput), "unregistered", Integer.parseInt(currentSemesterInput), 0, new ArrayList<String>()));
+        // updateDatabase()
         System.out.printf("%s %s has been added to the student database.", firstNameInput, lastNameInput);
     }
 
@@ -184,10 +442,78 @@ public class App {
         System.out.println("The Current Student List:\n");
         for (Student student : studentData) {
             // sorry to the reader of this
-            System.out.printf("%s\nStudentId: %s\nFirst Name: %s\nLast Name: %s\nDate of Birth: %s\nGender: %s\nGPA: %.2f\nProgram: %s\nCurrent Semester: %d\nCourses Enrolled: %d\n", hr(), student.studentId, student.firstName, student.lastName, student.dateOfBirth,
-                    student.gender, student.gpa, student.program, student.currentSemester, student.coursesEnrolled
+            System.out.printf(" %s\nFirst Name: %s\nLast Name: %s\nDate of Birth: %s\nGender: %s\nGPA: %.2f\nProgram: %s\nCurrent Semester: %d\nCourses Enrolled: %d\n", hr(), student.firstName, student.lastName, student.dateOfBirth,
+                    student.gender, student.gpa, student.program, student.currentSemester, student.numberOfCourses
             );
         }
+    }
+
+    private static void EnrollToNewProgram() {
+    
+        // updateDatabase()
+
+    }
+
+    
+    //program functions 
+    private static void createProgram() {
+        String programNameInput = validateInputBasedOnCondition("Student First Name: ", input -> input.matches("[a-zA-Z]+"));
+        
+        String gpaInput = validateInputBasedOnCondition("Student GPA (4.0 Scale): ", input -> {
+            try {
+                float gpa = Float.parseFloat(input);
+                return gpa >= 0.0f && gpa <= 4.0f;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        
+        Array coursesInput = validateInputBasedOnCondition(input, null)
+        });    
+        // updateDatabase()
+    }
+    private static void removeProgram() {
+        //When a program is removed iterate courses array
+        //for each course in array 
+        //removeCourse()
+
+    }
+    
+    private static void editProgram() {
+        // updateDatabase()
+
+    }
+    private static void addStudentToPorgram() {
+        // updateDatabase()
+    }
+
+    private static void editEnrolledStudentsInProgram() {
+        // updateDatabase()
+    }
+
+    //course functions 
+    private static void createCourse() {
+        // updateDatabase()
+    }
+    
+    private static void removeCourse() {
+        //When a course is removed iterate students array
+        //for each students in array 
+        //remove all students from course 
+        //then remove course 
+    }
+    private static void editEnrolledStudentsInCourse() {
+        // updateDatabase()
+    }
+    private static void addStudenToCourse() {
+        // updateDatabase()
+    }
+
+    private static void dropStudentfromCourse() {
+        // updateDatabase()
+    }
+    
+    private static void viewEnrolledStudentsForCourse() {
+        
     }
 
     // helper method that asks for a studet based on first and last name, no case sensitivty

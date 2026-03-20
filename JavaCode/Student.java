@@ -1,5 +1,7 @@
 package JavaCode;
 
+import java.util.ArrayList;
+
 public class Student {
 
     public enum Gender {
@@ -8,8 +10,6 @@ public class Student {
         NON_BINARY,
         OTHER
     }
-    public long studentId; // 🐱 all classes will have a id to be used to reference each other in the program 
-        // 🐱 Actually it easier to reference based on the class objects name but I already added some functions related to it 
     public String firstName;
     public String lastName;
     public String dateOfBirth;
@@ -17,10 +17,10 @@ public class Student {
     public float gpa;
     public String program;
     public int currentSemester; // this and coursesEnrolled should really use byte, but bytes don't have a literal declartion...
-    public int coursesEnrolled;
+    public int numberOfCourses;
+    public ArrayList<String> enrolledcourses; 
 
-    public Student(long studentId, String firstName, String lastName, String dateOfBirth, Gender gender, float gpa, String program, int currentSemester, int coursesEnrolled) {
-        this.studentId = studentId;
+    public Student(String firstName, String lastName, String dateOfBirth, Gender gender, float gpa, String program, int currentSemester, int numberOfCourses, ArrayList<String> enrolledcourses ) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -28,7 +28,8 @@ public class Student {
         this.gender = gender;
         this.program = program;
         this.currentSemester = currentSemester;
-        this.coursesEnrolled = coursesEnrolled;
+        this.numberOfCourses = numberOfCourses;
+        this.enrolledcourses = enrolledcourses; 
     }
 
 }

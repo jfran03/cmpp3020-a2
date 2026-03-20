@@ -3,15 +3,14 @@ package JavaCode;
 import java.util.ArrayList;
 
 public class Course {
-  public long courseId;
-  public String courseName;
-  public long programId;
-  public ArrayList<Long> enrolledStudents; 
 
-    public Course(long courseId, String courseName, long programId, ArrayList<Long> enrolledStudents) {
+  public String courseName;
+  public String programName;
+  public ArrayList<String> enrolledStudents; 
+
+    public Course(String courseName, String programName, ArrayList<String> enrolledStudents) {
  
-        this.courseId = courseId;
         this.courseName = courseName;
-        this.programId = programId;
+        this.programName = programName;
         this.enrolledStudents = new ArrayList<>(enrolledStudents);
     }}
