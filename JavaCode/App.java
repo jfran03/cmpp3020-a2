@@ -56,46 +56,45 @@ public class App {
                             }
                         }
                     }
-                    System.out.printf("\nStudent Menu\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+                    System.out.printf("\nStudent Menu\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
                         hr(),
                         "1. Enroll Student",
-                        "2. Register Student to program", 
+                        "2. Register Student to program",
                         "3. Edit Student",
                         "4. View Enrolled Students",
                         "5. Remove Student",
                         "6. Return to Main Menu",
                         hr()
                     );
-
                     String option = validateInputBasedOnCondition("Select your option: ", input -> {
                         return input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5") || input.equals("6");
                     });
                     switch (option) {
-                        case "1" -> {
-                            EnrollStudentFlow();
+                            case "1" -> {
+                                EnrollStudentFlow();
+                            }
+                            case "2" -> {
+                                studentRegistrationFlow();
+                            }
+                            case "3" -> {
+                                EditStudentFlow();
+                            }
+                            case "4" -> {
+                                ViewStudentsFlow();
+                            }
+                            case "5" -> {
+                                RemoveStudentFlow();
+                            }
+                            case "6" -> {
+                                studentMenu = false;
+                            }
                         }
-                        case "2" -> {
-                            studentRegistrationFlow();
-                        }
-                        case "3" -> {
-                            EditStudentFlow();
-                        }
-                        case "4" -> {
-                            ViewStudentsFlow();
-                        }
-                        case "5" -> {
-                            RemoveStudentFlow();
-                        }
-                        case "6" -> {
-                            studentMenu = false;
                         }
                     }
-                }
-            }
             case "2" -> {  
                 boolean programMenu = true;
                 while(programMenu) {
-                    System.out.printf("\nProgram Menu\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+                    System.out.printf("\nProgram Menu\n%s\n%s\n%s\n%s\n%s\n%s\n",
                         hr(),
                         "1. View Programs",
                         "2. Create Program",
@@ -104,34 +103,25 @@ public class App {
                         hr()
                     );
                     String option = validateInputBasedOnCondition("Select your option: ", input -> {
-                        return input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5");
+                        return input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4");
                     });
                     switch (option) {
-                    case "1" -> {
-                        viewProgramsFlow();
+                        case "1" -> viewProgramsFlow();
+                        case "2" -> createProgramFlow();
+                        case "3" -> removeProgramFlow();
+                        case "4" -> programMenu = false;
                     }
-                    case "2" -> {
-                        createProgramFlow();
-                    }
-                    case "3" -> {
-                        removeProgramFlow();
-                    }
-                    case "4" -> {
-                        programMenu = false;
-                    }
-                }
                 }
             }
             case "3" -> {  
                 boolean courseMenu = true;
                 while(courseMenu) {
-                    System.out.printf("\nCourse Menu\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+                    System.out.printf("\nCourse Menu\n%s\n%s\n%s\n%s\n",
                         hr(),
                         "1. View Courses",
-                        "2. View classlist of a course",
+                        "2. Return to Main Menu",
                         hr()
                     );
-
                     String option = validateInputBasedOnCondition("Select your option: ", input -> {
                         return input.equals("1") || input.equals("2");
                     });
@@ -187,8 +177,29 @@ public class App {
         courseData.add(new Course("Networking", "CyberSecurity",new ArrayList<>()));
         courseData.add(new Course("Cloud Security","CyberSecurity",new ArrayList<>()));
         
-        //populates empty array fields for the class instances 
-        updateDatabase();
+        //populates the Program's instance's "enrolledStudents" array 
+        for (Student s : studentData) {
+            for (Program p : programData) {
+                if (p.programName.equalsIgnoreCase(s.program)) {
+                    p.enrolledStudents.add(s.firstName + " " + s.lastName);
+                }
+            }
+        }
+
+        for (Course c : courseData) {
+            for (Program p : programData) {
+                if (p.programName.equalsIgnoreCase(c.program)) {
+                    p.requiredCourses.add(c.courseName);
+                }
+            }
+            for (Student s : studentData) {
+                if (c.program.equalsIgnoreCase(s.program)) {
+                    c.enrolledStudents.add(s.firstName + " " + s.lastName);
+                    s.enrolledCourses.add(c.courseName);
+                    s.numberOfCourses = s.enrolledCourses.size();
+                }
+            }
+        }
     }
     //helper method that cleans up database upon every update; whenever a class instance is changed 
     //acts as a simple refersher
@@ -477,22 +488,6 @@ public class App {
                 return false;
             }
         });
-
-        ///➜ took courses enrolled out as it will be 0 by default 
-        /*
-        validateInputBasedOnCondition("Courses Enrolled: ", input -> {
-            boolean valid = input.matches("\\d+") || input.length() == 0;
-
-            if (valid) {
-                if (input.length() != 0) {
-                    student.numberOfCourses = Integer.parseInt(input);
-                }
-                return true;
-            } else {
-                return false;
-            }
-        });
-        */
         System.out.printf("%s\n%s %s has been updated.\n%s", hr(),student.firstName, student.lastName,hr());
     }
 
@@ -566,28 +561,7 @@ public class App {
         updateDatabase();
     }
 
-    // /➜ removed and replaced with 
-    //helper method that asks for a studet based on first and last name, no case sensitivty
-    // will keep prompting until user inputs correct name
-     /*
-    private static Student findStudentOnName() {
-        Student result = null;
-        // we shouldn't need to validate, but it wont hurt considering all entries are compliant with the format
-        String firstNameInput = validateInputBasedOnCondition("Student First Name: ", input -> input.matches("[a-zA-Z]+"));
-        String lastNameInput = validateInputBasedOnCondition("Student Last Name: ", input -> input.matches("[a-zA-Z]+"));
-        for (Student student : studentData) {
-            if (student.firstName.equalsIgnoreCase(firstNameInput) && student.lastName.equalsIgnoreCase(lastNameInput)) {
-                result = student;
-            }
-        }
-        if (result == null) {
-            System.out.printf("\n%s %s was not found, try again.\n", firstNameInput, lastNameInput);
-            findStudentOnName();
-        }
-        return result;
-    }
-    */
-    
+
     //program functions 
     //creates a new program & course instance 
     //because a course needs to exist in a program instance array for its required courses 
