@@ -18,9 +18,9 @@ public class Student {
     public String program;
     public int currentSemester; // this and coursesEnrolled should really use byte, but bytes don't have a literal declartion...
     public int numberOfCourses;
-    public ArrayList<String> enrolledcourses; 
+    public ArrayList<String> enrolledCourses; 
 
-    public Student(String firstName, String lastName, String dateOfBirth, Gender gender, float gpa, String program, int currentSemester, int numberOfCourses, ArrayList<String> enrolledcourses ) {
+    public Student(String firstName, String lastName, String dateOfBirth, Gender gender, float gpa, String program, int currentSemester, int numberOfCourses, ArrayList<String> enrolledCourses ) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -29,7 +29,7 @@ public class Student {
         this.program = program;
         this.currentSemester = currentSemester;
         this.numberOfCourses = numberOfCourses;
-        this.enrolledcourses = enrolledcourses; 
+        this.enrolledCourses = enrolledCourses; 
     }
 
 }
