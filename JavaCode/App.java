@@ -31,12 +31,13 @@ public class App {
 
 
     while (process) {
-        // sorry to whoever has to edit this!
+        //program uses lengthy while loop to run itself
+
         System.out.printf("\nHello, welcome to the Registration Program\n%s\nPlease select an option:\n%s\n%s\n%s\n%s\n%s\n", 
                         hr(), 
-                        "1. View data related to Students", 
-                        "2. View instution's programs", 
-                        "3. View instution's courses", 
+                        "1. View instution's student database", 
+                        "2. View data related to instution's programs", 
+                        "3. View data related to instution's courses", 
                         "4. Exit the Application", 
                         hr());
         // implementation here is kind of naive, but fits all test cases!
@@ -49,7 +50,7 @@ public class App {
                 boolean studentMenu = true;
                 while(studentMenu) {
                     if (checkUnregisteredStudents()) {
-                        System.out.printf("\n⚠ Warning: The following students are not registered to a program:\n");
+                        System.out.printf("\n⚠ The following students are not registered to a program, input '4' to enroll tem now.:\n");
                         for (Student s : studentData) {
                             if (s.program.equalsIgnoreCase("unregistered")) {
                                 System.out.printf("  - %s %s\n", s.firstName, s.lastName);
@@ -177,7 +178,7 @@ public class App {
         courseData.add(new Course("Networking", "CyberSecurity",new ArrayList<>()));
         courseData.add(new Course("Cloud Security","CyberSecurity",new ArrayList<>()));
         
-        //populates the Program's instance's "enrolledStudents" array 
+        //populates empty array lists of class instances to simulate existing data
         for (Student s : studentData) {
             for (Program p : programData) {
                 if (p.programName.equalsIgnoreCase(s.program)) {
@@ -202,7 +203,8 @@ public class App {
         }
     }
     //helper method that cleans up database upon every update; whenever a class instance is changed 
-    //acts as a simple refersher
+    //acts as a impure function
+    //it cleans up the database to make sure all class instances follow their constraints upon being changed
     private static void updateDatabase() {
         // if student's program no longer exists, set them to unregistered and clear their courses
         for (Student s : studentData) {
@@ -212,7 +214,6 @@ public class App {
                 s.enrolledCourses.clear();
             }
         }
-
         // if a course's program no longer exists, remove the course
         for (Course c : new ArrayList<>(courseData)) {
             Program p = queryDatabase(programData, name -> name.equalsIgnoreCase(c.program));
@@ -220,22 +221,21 @@ public class App {
                 removeCourse(c, null);
             }
         }
-
-        // if a program's enrolled student no longer exists in studentData, remove them from the program
+        // if a program's enrolled student no longer exists in the database, remove them from the program
         for (Program p : programData) {
             p.enrolledStudents.removeIf(enrolledName ->
                 queryDatabase(studentData, name -> name.equalsIgnoreCase(enrolledName)) == null
             );
         }
 
-        // if a course's enrolled student no longer exists in studentData, remove them from the course
+        // if a course's enrolled student no longer exists  in the database, remove them from the course
         for (Course c : courseData) {
             c.enrolledStudents.removeIf(enrolledName ->
                 queryDatabase(studentData, name -> name.equalsIgnoreCase(enrolledName)) == null
             );
         }
 
-        // re-sync program requiredCourses, course enrolledStudents, and student enrolledCourses
+        // re-sync program to have class instances be referenced in the proper class array lists 
         for (Course c : courseData) {
             for (Program p : programData) {
                 if (p.programName.equalsIgnoreCase(c.program) && !p.requiredCourses.contains(c.courseName)) {
@@ -258,7 +258,9 @@ public class App {
             s.numberOfCourses = s.enrolledCourses.size();
         }
     }
+    
     //helper method that only exists to notify system that there are unregistered students in the system. 
+    //This method prints a message in the student menu 
     private static boolean checkUnregisteredStudents() {
     for (Student s : studentData) {
         if (s.program.equalsIgnoreCase("unregistered")) {
@@ -288,7 +290,6 @@ public class App {
         }
         return null;
     }
-    // we could overload "EnrollStudentFlow" method but i don't think it'll be necessary
     // adds a new student to the "database"
      private static void EnrollStudentFlow() {
         // input validation through regex, ensures that data is good for when we add it to the class
@@ -321,15 +322,9 @@ public class App {
                 return false;
             }
         });
-
-        //➜ removed input for updated validation flow; Since the student needs to be a certain gpa to enroll in a program.It would be better to have the student be created first then enroll after 
-        //String programInput = validateInputBasedOnCondition("Student Program: ", input -> input.matches("[a-zA-Z ]+"));
-
         // only allows unsigned ints
         String currentSemesterInput = validateInputBasedOnCondition("Current Semester: ", input -> input.matches("\\d+"));
 
-        //➜ took "numberOfCoursesInput" out as it will be 0 by default 
-        //String numberOfCoursesInput = validateInputBasedOnCondition("Courses Enrolled: ", input -> input.matches("\\d+"));
 
         // adds new user to database
         Student newStudentObj = new Student(firstNameInput, lastNameInput, dobInput, Gender.valueOf(genderInput.toUpperCase()), Float.parseFloat(gpaInput), "unregistered", Integer.parseInt(currentSemesterInput), 0, new ArrayList<>());
@@ -351,6 +346,7 @@ public class App {
                         addStudentToProgram(newStudentObj, program);
                         return; 
                     } else {
+                        //if no programs exist, createProgramFlow() is invoked to register the student into a class
                         System.out.println("\n No programs currently avaliable, please create a program before registering");
                         createProgramFlow();
                         // Loops back to registration option once a program is created 
@@ -366,7 +362,6 @@ public class App {
     }
 
     // finds and removes student form ArrayList, pretty straightforward
-    // When student is removed
     private static void RemoveStudentFlow() {
         String firstNameInput = validateInputBasedOnCondition("Student First Name: ", input -> input.matches("[a-zA-Z]+"));
         String lastNameInput = validateInputBasedOnCondition("Student Last Name: ", input -> input.matches("[a-zA-Z]+"));
@@ -376,8 +371,9 @@ public class App {
             System.out.println("\nStudent not found.");
             return;
         }
-        System.out.printf("%s %s has been removed from the student database.\n%s", student.firstName, student.lastName,hr());
+        System.out.printf("%s %s has withdrew from Sait.\n%s", student.firstName, student.lastName,hr());
         studentData.remove(student);
+    
         updateDatabase();
     }
 
@@ -449,33 +445,6 @@ public class App {
             }
         });
 
-        validateInputBasedOnCondition("Student GPA (4.0 Scale): ", input -> {
-            // hacky fix
-            boolean valid = input.length() == 0 || (Float.parseFloat(input) >= 0.0f && Float.parseFloat(input) <= 4.0f);
-
-            if (valid) {
-                if (input.length() != 0) {
-                    student.gpa = Float.parseFloat(input);
-                }
-                return true;
-            } else {
-                return false;
-            }
-        });
-
-        validateInputBasedOnCondition("Student Program: ", input -> {
-            boolean valid = input.matches("[a-zA-Z]+") || input.length() == 0;
-
-            if (valid) {
-                if (input.length() != 0) {
-                    student.program = input;
-                }
-                return true;
-            } else {
-                return false;
-            }
-        });
-
         validateInputBasedOnCondition("Current Semester: ", input -> {
             boolean valid = input.matches("\\d+") || input.length() == 0;
 
@@ -502,7 +471,7 @@ public class App {
         }
     }
 
-    //method acts as a seperate registration flow to assign existing student instances to a program. If no program, then the prog
+    //method acts as a seperate registration flow to assign existing student instances to a program.
     private static void studentRegistrationFlow(){
         String firstNameInput = validateInputBasedOnCondition("Student First Name: ", input -> input.matches("[a-zA-Z]+"));
         String lastNameInput = validateInputBasedOnCondition("Student Last Name: ", input -> input.matches("[a-zA-Z]+"));
@@ -523,9 +492,11 @@ public class App {
         }
         addStudentToProgram(student, program);
         updateDatabase();
+        System.out.println("\nStudent successfully registered to their desired program.");
     }
+
     // helper function that enrolls student to a program
-    // if student was in a program before hand they will be removed from their registered courses (and the courses will remove the stuent)
+    // if student was in a program before hand they will be removed from their registered courses (and the courses will remove the student)
     // then the student changes their program to the new registered program and is enrolled into their courses 
     private static void addStudentToProgram(Student student, Program program){
         
@@ -533,8 +504,7 @@ public class App {
             System.out.printf("\n%s %s does not meet the minimum GPA requirement of %.1f for %s.\n", student.firstName, student.lastName, program.prerequisiteGpa, program.programName);
         return;}
         
-        //if student instance is currently enrolled at another program
-        //student is removed from program 
+        //if student instance is currently enrolled at another program, they are removed from that program and its courses accordingly 
         if (!student.program.equalsIgnoreCase("unregistered")) {
             for (Course c : courseData) {
                 if (c.program.equalsIgnoreCase(student.program)) {
@@ -563,7 +533,7 @@ public class App {
 
 
     //program functions 
-    //creates a new program & course instance 
+    //createProgramFlow() creates a new program & course instance 
     //because a course needs to exist in a program instance array for its required courses 
     private static void createProgramFlow() {
         String programNameInput = validateInputBasedOnCondition("Program Name: ", input -> input.matches("[a-zA-Z]+"));
@@ -662,7 +632,7 @@ public class App {
         );
     }
     
-    //you would never guess what this method does
+    // this method iterates through courseData list and prints them
     private static void ViewCoursesFlow() {
         System.out.println("The Current Course List:\n");
         for (Course course : courseData) { System.out.printf("%s\nCourse: %s\nProgram: %s\nEnrolled Students: %s\n", hr(),course.courseName,course.program,course.enrolledStudents);}
@@ -699,8 +669,6 @@ public class App {
         student.numberOfCourses = student.enrolledCourses.size();
     }
     
-
-
     // create a horizontal line for better UI
     // if a length param is not provided, assume 50 characters
     // java doesn't really support optional params, overloading is common alternative
